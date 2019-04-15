@@ -1,0 +1,90 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: #555;
+  font-family: arial;
+}
+
+.calculator-container {
+  margin: 10px auto;
+  padding: 10px;
+  width: 50%;
+  max-width: 600px;
+  min-width: 400px;
+  height: 25%;
+  /* background-color: darkred; */
+  /* background-color: #700; */
+  background-color: #333;
+  /* color: lightgreen; */
+  /* color: green; */
+  color: #cda;
+  user-select: none;
+}
+
+#title {
+  text-align: center;
+  font-size: 2em;
+}
+
+.display-container {
+  /* background-color: papayawhip; */
+  /* background-color: #cda; */
+  background-color: #aaa;
+  margin: 1% auto;
+  border: black solid 1px;
+  padding: 5px;
+  width: 98%;
+  height: 95%;
+  text-align: right;
+  color: black;
+  font-size: 2rem;
+  font-family: helvetica;
+  overflow: scroll;
+  overflow-y: hidden;
+}
+
+#display {
+  /* text-align: right; */
+  color: black;
+  letter-spacing: 3px;
+}
+
+.input-container{
+  margin: 1% auto;
+  display: block;
+  width: 98%;
+}
+
+.grid-container {
+  /* background-color: steelblue; */
+  padding: 10px;
+  /* color: navajowhite; */
+  color: #dd8;
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  grid-column-gap: 10px;
+  grid-row-gap: 10px;
+  font-size: 1.8rem;
+  font-weight: bold;
+  text-align: center;
+  border: papayawhip solid 1px;
+}
+
+#one,#two,#three,#four,#five,#six,#seven,#eight,#nine,#zero,#dot,#plus,#minus,#multiply,#divide,#equal,#clear,#backspace,#negate {
+  border: black solid 1px;
+  background-color: #222;
+}
+
+#plus,#minus,#multiply,#divide {
+  /* background-color: orangered; */
+  background-color: #c50;
+}
+
+#clear,#backspace,#negate {
+  /* background-color: #220; */
+  background-color: lightgreen;
+  color: black;
+}
