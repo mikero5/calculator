@@ -10,11 +10,18 @@ const display = document.querySelector('#display');
 const gridContainer = document.querySelectorAll('.grid-element');
 const gridContainerArray = Array.from(gridContainer);
 
+window.addEventListener('keypress', function(e) {
+  handleKeypress(e);
+});
+
 const MAX_INPUT_CHARS = 14;
 
 for(d in gridContainerArray) {
   gridContainerArray[d].addEventListener('mouseover', function() {
     this.style.cssText = 'background-color: #7f7d67;';
+    if(this.id === 'backspace') {
+      
+    }
   });
 
   gridContainerArray[d].addEventListener('mouseout', function() {
@@ -46,6 +53,65 @@ for(d in gridContainerArray) {
 clearCalculator();
 
 //==========================================================================
+
+function handleKeypress(e) {
+  if(global.error) clearCalculator();
+
+  console.log(e);
+  console.log(e.key);
+  let key = e.key;
+  let keyCode = e.keyCode;
+
+
+  if(key === '+') {
+    handlePlus();
+    setAnswering(false);
+    return;
+  }
+  if(key === '-'){
+    handleMinus();
+    setAnswering(false);
+    return;
+  }
+  if(key === '*'){
+    handleMultiply();
+    setAnswering(false);
+    return;
+  }
+  if(key === '/'){
+    handleDivide();
+    setAnswering(false);
+    return;
+  }
+  if(key === 'Enter'){
+    handleEqual();
+    return;
+
+  }
+  if(key === '.'){
+    handleDot();
+    setAnswering(false);
+    return;
+  }
+  if(key === ' '){
+    clearCalculator();
+    return;
+  }
+  if(key === 'Delete'){
+    handleBackspace();
+    setAnswering(false);
+    return;
+  }
+  if(key === '~'){
+    handleNegate();
+    setAnswering(false);
+    return;
+  }
+
+  if(global.answering) clearCalculator();
+
+  acceptChar(key);
+}
 
 //------------------------------------
 function handleClick(element) {
@@ -257,61 +323,64 @@ function evaluate() {
   setAnswering(true);
 
   let displayArray = global.display.split(' ');
-  console.log('displayArray: ' + displayArray);
+  let mathArray = [];
+  let skip = null;
 
-  for(token in displayArray) {
-    if(displayArray[token] === '*' || displayArray[token] === '/') {
-      let operation = displayArray.splice(token-1, 3);
-
-      console.log('displayArray: ' + displayArray);
-      console.log('operation: ' + operation);
-      console.log('token: ' + token);
-
-      let o1 = Number(operation[0]);
-      let o2 = Number(operation[2]);
-      let value = 0;
-      if(operation[1] === '*')
-        value = o1 * o2;
-      else {
-        if(o2 === 0) {
-          global.error = true;
-          return 'ERROR: Div by zero';
-        }
-        value = o1 / o2;
-      }
-
-      console.log('global.expression: ' + global.expression);
-      console.log('global.display: ' + global.display);
-      console.log('displayArray: ' + displayArray);
-
-      displayArray.splice(token-1, 0, String(value));
-
-      token--;
-
-      console.log('displayArray: ' + displayArray);
-      console.log('..............');
+  for(t in displayArray) {
+    if(skip === true) {
+      skip = false;
+      continue;
     }
-  }
 
-  for(token in displayArray) {
-    if(displayArray[token] === '+' || displayArray[token] === '-') {
-      let operation = displayArray.splice(token-1, 3);
-      let o1 = Number(operation[0]);
-      let o2 = Number(operation[2]);
-      let value = 0;
-      if(operation[1] === '+')
-        value = o1 + o2;
-      else {
-        value = o1 - o2;
+    let token = displayArray[t];
+
+    if(token === '*' || token === '/') {
+      let next = Number(t) + 1;
+      let op1 = mathArray.pop();
+      let op2 = displayArray[next];
+      skip = true;
+
+      let result = Number(op1);
+      if(token === '*'){
+        result *= Number(op2);
       }
-      displayArray.splice(token-1, 3, String(value));
+      else {
+        result /= Number(op2);
+      }
+      mathArray.push(String(result));
     }
-  }
+    else {
+      mathArray.push(token);
+    }
+  } // for(t in displayArray)
 
-  global.display = displayArray.join(' ');
+  skip = false;
+  result = Number(mathArray[0]);
+
+  for(t in mathArray) {
+    if(skip === true) {
+      skip = false;
+      continue;
+    }
+
+    let operator = null;
+    token = mathArray[t];
+
+    if(token === '+' || token === '-') {
+      next = Number(t) + 1;
+
+      if(token === '+'){
+        result += Number(mathArray[next]);
+      }
+      else {
+        result -= Number(mathArray[next]);
+      }
+      skip = true;
+    }
+  } // for(t in mathArray)
+
+  global.display = String(result);
   global.expression = global.display;
-
-console.log('--------------------------------');
 
   return global.display;
 }
